@@ -24,7 +24,7 @@ namespace Assemble.Desktop
             {
                 for(var y = 0; y < _sizeY; y++)
                 {
-                    _entityBuilder.BuildTile(_world.CreateEntity(), new Point2(x, y));
+                    _entityBuilder.BuildTile(_world.CreateEntity(), x, y);
                 }
             }
         }

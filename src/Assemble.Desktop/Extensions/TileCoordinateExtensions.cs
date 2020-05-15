@@ -4,12 +4,10 @@ namespace Assemble.Desktop.Extensions
 {
     static class TileCoordinateExtensions
     {
-        private const float TileSize = 64f;
-        public static Point2 MapFromTileCoordinateToCenterPoint(this Point2 tileCoordinate)
+        public static Point2 MapFromTileIndexToPoint(this (int, int) tileIndex)
         {
-            return new Point2(
-                tileCoordinate.X * TileSize + TileSize * 0.5f,
-                tileCoordinate.Y * TileSize + TileSize * 0.5f);
+            var (tileX, tileY) = tileIndex;
+            return new Point2(tileX, tileY);
         }
     }
 }

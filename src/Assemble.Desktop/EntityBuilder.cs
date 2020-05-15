@@ -16,9 +16,9 @@ namespace Assemble.Desktop
             _contentManager = contentManager;
         }
 
-        public Entity BuildTile(Entity entity, Point2 tileCoordinate)
+        public Entity BuildTile(Entity entity, int tileIndexX, int tileIndexY)
         {
-            entity.Attach(new Transform2(tileCoordinate.MapFromTileCoordinateToCenterPoint()));
+            entity.Attach(new Transform2((tileIndexX, tileIndexY).MapFromTileIndexToPoint()));
             entity.Attach(new Sprite(_contentManager.Load<Texture2D>("Tile")));
             return entity;
         }
