@@ -11,12 +11,14 @@ namespace Assemble.Desktop.Systems
     class RenderSystem : EntityDrawSystem
     {
         private readonly SpriteBatch _spriteBatch;
+        private readonly OrthographicCamera _camera;
         private ComponentMapper<Transform2> _transformMapper;
         private ComponentMapper<Sprite> _spriteMapper;
 
-        public RenderSystem(SpriteBatch spriteBatch) : base(Aspect.All(typeof(Transform2), typeof(Sprite)))
+        public RenderSystem(SpriteBatch spriteBatch, OrthographicCamera camera) : base(Aspect.All(typeof(Transform2), typeof(Sprite)))
         {
             _spriteBatch = spriteBatch;
+            _camera = camera;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -27,7 +29,7 @@ namespace Assemble.Desktop.Systems
 
         public override void Draw(GameTime gameTime)
         {
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
             foreach (var entity in ActiveEntities)
             {
                 var transform = _transformMapper.Get(entity).ToIsometric();

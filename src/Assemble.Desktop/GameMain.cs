@@ -13,6 +13,8 @@ namespace Assemble.Desktop
         private SpriteBatch _spriteBatch;
         private World _world;
 
+        private OrthographicCamera _camera;
+
         public GameMain()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -30,15 +32,19 @@ namespace Assemble.Desktop
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            _camera = new OrthographicCamera(GraphicsDevice);
             _world = new WorldBuilder()
-                .AddSystem(new RenderSystem(_spriteBatch))
+                .AddSystem(new ControlSystem())
+                .AddSystem(new CameraSystem())
+                .AddSystem(new RenderSystem(_spriteBatch, _camera))
                 .Build();
 
             var entityBuilder = new EntityBuilder(Content);
 
             var mapBuilder = new MapBuilder(_world, entityBuilder, 100, 100);
             mapBuilder.BuildMap();
+
+            var gameCamera = entityBuilder.BuildGameCamera(_world.CreateEntity(), _camera, new Vector2(50, 50));
 
             // TODO: use this.Content to load your game content here
         }
