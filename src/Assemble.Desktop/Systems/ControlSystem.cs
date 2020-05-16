@@ -10,19 +10,39 @@ namespace Assemble.Desktop.Systems
     class ControlSystem : EntityProcessingSystem
     {
         private ComponentMapper<Moveable> _moveableMapper;
+        private ComponentMapper<Zoomable> _zoomableMapper;
 
-        public ControlSystem() : base(Aspect.All(typeof(Moveable), typeof(Controlable)))
+        public ControlSystem() : base(Aspect.All(typeof(Controlable)))
         {
         }
 
         public override void Initialize(IComponentMapperService mapperService)
         {
             _moveableMapper = mapperService.GetMapper<Moveable>();
+            _zoomableMapper = mapperService.GetMapper<Zoomable>();
         }
 
         public override void Process(GameTime gameTime, int entityId)
         {
             var keyboardState = KeyboardExtended.GetState();
+            var mouseState = MouseExtended.GetState();
+
+            var moveable = _moveableMapper.Get(entityId);
+            if (moveable != null)
+            {
+                ProcessMovement(gameTime, moveable, keyboardState);
+            }
+
+            var zoomable = _zoomableMapper.Get(entityId);
+            if (zoomable != null)
+            {
+                ProcessZoom(gameTime, zoomable, mouseState);
+            }
+
+        }
+
+        private void ProcessMovement(GameTime gameTime, Moveable moveable, KeyboardStateExtended keyboardState)
+        {
             var normalizedMotion = Vector2.Zero;
             if (keyboardState.IsKeyDown(Keys.W))
             {
@@ -44,9 +64,12 @@ namespace Assemble.Desktop.Systems
                 normalizedMotion += new Vector2(1, 0);
             }
 
-            var moveable = _moveableMapper.Get(entityId);
+            moveable.Velocity = normalizedMotion * moveable.Speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
+        }
 
-            moveable.Velocity = normalizedMotion * moveable.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        private void ProcessZoom(GameTime gameTime, Zoomable zoomable, MouseStateExtended mouseState)
+        {
+            zoomable.Zoom += (float)gameTime.ElapsedGameTime.TotalSeconds * 0.03f * mouseState.DeltaScrollWheelValue;
         }
     }
 }

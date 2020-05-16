@@ -9,6 +9,7 @@ namespace Assemble.Desktop.Systems
     {
         private ComponentMapper<GameCamera> _cameraMapper;
         private ComponentMapper<Moveable> _moveableMapper;
+        private ComponentMapper<Zoomable> _zoomableMapper;
 
         public CameraSystem() : base(Aspect.All(typeof(GameCamera)))
         {
@@ -18,16 +19,23 @@ namespace Assemble.Desktop.Systems
         {
             _cameraMapper = mapperService.GetMapper<GameCamera>();
             _moveableMapper = mapperService.GetMapper<Moveable>();
+            _zoomableMapper = mapperService.GetMapper<Zoomable>();
         }
 
         public override void Process(GameTime gameTime, int entityId)
         {
             var camera = _cameraMapper.Get(entityId);
             var moveable = _moveableMapper.Get(entityId);
+            var zoomable = _zoomableMapper.Get(entityId);
 
             if (moveable != null)
             {
                 camera.Camera.Position += moveable.Velocity;
+            }
+
+            if (zoomable != null)
+            {
+                camera.Camera.Zoom = zoomable.Zoom;
             }
         }
     }
