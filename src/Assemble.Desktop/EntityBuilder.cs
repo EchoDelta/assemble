@@ -22,6 +22,7 @@ namespace Assemble.Desktop
         {
             entity.Attach(new Transform2((tileIndexX, tileIndexY).MapFromTileIndexToPoint()));
             entity.Attach(new Sprite(_contentManager.Load<Texture2D>("Tile")));
+            entity.Attach(new MapTile(Color.DarkGreen));
             return entity;
         }
 

@@ -37,6 +37,7 @@ namespace Assemble.Desktop
                 .AddSystem(new ControlSystem())
                 .AddSystem(new CameraSystem())
                 .AddSystem(new RenderSystem(_spriteBatch, _camera))
+                .AddSystem(new MapRenderSystem(_spriteBatch, _camera))
                 .Build();
 
             var entityBuilder = new EntityBuilder(Content);
