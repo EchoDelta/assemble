@@ -31,7 +31,7 @@ namespace Assemble.Desktop
             camera.Position = initialPosition.ToIsometric();
             entity.Attach(new GameCamera(camera));
             entity.Attach(new Moveable(200.0f));
-            entity.Attach(new Zoomable(2.0f, 0.5f));
+            entity.Attach(new Zoomable(1.0f, 0.5f));
             entity.Attach(new Controlable());
             return entity;
         }

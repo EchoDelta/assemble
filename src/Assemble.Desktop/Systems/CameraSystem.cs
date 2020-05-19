@@ -28,14 +28,14 @@ namespace Assemble.Desktop.Systems
             var moveable = _moveableMapper.Get(entityId);
             var zoomable = _zoomableMapper.Get(entityId);
 
-            if (moveable != null)
-            {
-                camera.Camera.Position += moveable.Velocity;
-            }
-
             if (zoomable != null)
             {
                 camera.Camera.Zoom = zoomable.Zoom;
+            }
+
+            if (moveable != null)
+            {
+                camera.Camera.Position += moveable.Velocity / camera.Camera.Zoom;
             }
         }
     }

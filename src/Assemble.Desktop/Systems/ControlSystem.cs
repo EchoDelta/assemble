@@ -64,12 +64,12 @@ namespace Assemble.Desktop.Systems
                 normalizedMotion += new Vector2(1, 0);
             }
 
-            moveable.Velocity = normalizedMotion * moveable.Speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
+            moveable.Velocity = normalizedMotion * moveable.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         private void ProcessZoom(GameTime gameTime, Zoomable zoomable, MouseStateExtended mouseState)
         {
-            zoomable.Zoom += (float)gameTime.ElapsedGameTime.TotalSeconds * 0.03f * mouseState.DeltaScrollWheelValue;
+            zoomable.Zoom -= (float)gameTime.ElapsedGameTime.TotalSeconds * 0.015f * mouseState.DeltaScrollWheelValue;
         }
     }
 }
