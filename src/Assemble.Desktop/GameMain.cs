@@ -32,7 +32,10 @@ namespace Assemble.Desktop
         protected override void LoadContent()
         {
             const int mapSize = 100;
-            var entityBuilder = new EntityBuilder(Content);
+
+            var texturesManager = new TexturesManager(Content);
+            var entityBuilder = new EntityBuilder(texturesManager);
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _camera = new OrthographicCamera(GraphicsDevice);
             _world = new WorldBuilder()
@@ -43,6 +46,8 @@ namespace Assemble.Desktop
                 .Build();
 
             var mapBuilder = new MapBuilder(_world, entityBuilder, mapSize);
+
+            texturesManager.LoadTextures();
             mapBuilder.BuildMap();
 
             var gameCamera = entityBuilder.BuildGameCamera(_world.CreateEntity(), _camera, new Vector2(50, 50));
