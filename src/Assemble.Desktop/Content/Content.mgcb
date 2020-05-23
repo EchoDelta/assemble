@@ -25,3 +25,8 @@
 /processorParam:TextureFormat=Color
 /build:Tile.png
 
+#begin TileMap.xml
+/importer:XmlImporter
+/processor:PassThroughProcessor
+/build:TileMap.xml
+

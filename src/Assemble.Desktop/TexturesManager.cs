@@ -10,33 +10,41 @@ namespace Assemble.Desktop
     public class TexturesManager
     {
         private readonly ContentManager _contentManager;
-        IDictionary<Texture, Texture2D> _textureMap;
+        private readonly Random _random;
+        IDictionary<Texture, TextureRegion2D> _textureMap;
 
         public TexturesManager(ContentManager contentManager)
         {
             _contentManager = contentManager;
+            _random = new Random();
         }
 
         public void LoadTextures()
         {
-            _textureMap = new Dictionary<Texture, Texture2D>();
+            _textureMap = new Dictionary<Texture, TextureRegion2D>();
 
             LoadTiles();
         }
 
         private void LoadTiles()
         {
-            _textureMap.Add(Texture.Tile1, _contentManager.Load<Texture2D>("Tile"));
+            var texture = _contentManager.Load<Texture2D>("Tile");
+            var textureMap = _contentManager.Load<Dictionary<string, Rectangle>>("TileMap");
+            var atlas = new TextureAtlas("TileAtlas", texture, textureMap);
+            _textureMap.Add(Texture.Tile1, atlas.GetRegion(0));
+            _textureMap.Add(Texture.Tile2, atlas.GetRegion(1));
+            _textureMap.Add(Texture.Tile3, atlas.GetRegion(2));
+            _textureMap.Add(Texture.Tile4, atlas.GetRegion(3));
         }
 
-        public Texture2D GetTexture(params Texture[] textures)
+        public TextureRegion2D GetTexture(params Texture[] textures)
         {
             if (textures.Length == 0)
             {
                 throw new ArgumentException("Must specify at least one texture");
             }
-            var random = new Random();
-            return _textureMap[textures[random.Next(textures.Length)]];
+            var texture = textures[_random.Next(textures.Length)];
+            return _textureMap[texture];
         }
     }
 }

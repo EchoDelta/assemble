@@ -19,7 +19,7 @@ namespace Assemble.Desktop
         public Entity BuildTile(Entity entity, int tileIndexX, int tileIndexY)
         {
             entity.Attach(new Transform2((tileIndexX, tileIndexY).MapFromTileIndexToPoint()));
-            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Tile1)));
+            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Tile1, Texture.Tile2, Texture.Tile3, Texture.Tile4)));
             entity.Attach(new MapTile(Color.DarkGreen));
             return entity;
         }
