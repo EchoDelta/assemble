@@ -6,5 +6,8 @@ namespace Assemble.Desktop
         Tile2,
         Tile3,
         Tile4,
+        IronOre1,
+        IronOre2,
+        IronOre3,
     }
 }

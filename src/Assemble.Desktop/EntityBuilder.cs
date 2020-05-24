@@ -1,4 +1,5 @@
-﻿using Assemble.Desktop.Components;
+﻿using System;
+using Assemble.Desktop.Components;
 using Assemble.Desktop.Extensions;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
@@ -31,6 +32,14 @@ namespace Assemble.Desktop
             entity.Attach(new Moveable(200.0f));
             entity.Attach(new Zoomable(1.0f, 0.5f));
             entity.Attach(new Controlable());
+            return entity;
+        }
+
+        public Entity BuildIronOrePatch(Entity entity, int tileIndexX, int tileIndexY)
+        {
+            entity.Attach(new Transform2((tileIndexX, tileIndexY).MapFromTileIndexToPoint()));
+            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
+            entity.Attach(new MapTile(Color.LightBlue));
             return entity;
         }
     }

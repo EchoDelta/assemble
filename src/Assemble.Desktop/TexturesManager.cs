@@ -24,6 +24,7 @@ namespace Assemble.Desktop
             _textureMap = new Dictionary<Texture, TextureRegion2D>();
 
             LoadTiles();
+            LoadOre();
         }
 
         private void LoadTiles()
@@ -35,6 +36,16 @@ namespace Assemble.Desktop
             _textureMap.Add(Texture.Tile2, atlas.GetRegion(1));
             _textureMap.Add(Texture.Tile3, atlas.GetRegion(2));
             _textureMap.Add(Texture.Tile4, atlas.GetRegion(3));
+        }
+
+        private void LoadOre()
+        {
+            var texture = _contentManager.Load<Texture2D>("Ore");
+            var textureMap = _contentManager.Load<Dictionary<string, Rectangle>>("OreMap");
+            var atlas = new TextureAtlas("OreAtlas", texture, textureMap);
+            _textureMap.Add(Texture.IronOre1, atlas.GetRegion(0));
+            _textureMap.Add(Texture.IronOre2, atlas.GetRegion(1));
+            _textureMap.Add(Texture.IronOre3, atlas.GetRegion(2));
         }
 
         public TextureRegion2D GetTexture(params Texture[] textures)

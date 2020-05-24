@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<XnaContent>
+  <Asset Type="System.Collections.Generic.Dictionary[System.String, Microsoft.Xna.Framework.Rectangle]">
+    <Item>
+      <Key>Ore_001.png</Key>
+      <Value>0 0 128 64</Value>
+    </Item>
+    <Item>
+      <Key>Ore_002.png</Key>
+      <Value>128 0 128 64</Value>
+    </Item>
+    <Item>
+      <Key>Ore_003.png</Key>
+      <Value>256 0 128 64</Value>
+    </Item>
+  </Asset>
+</XnaContent>
