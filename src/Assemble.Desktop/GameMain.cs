@@ -25,7 +25,6 @@ namespace Assemble.Desktop
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            var asdf = new OrthographicCamera(GraphicsDevice);
             base.Initialize();
         }
 
