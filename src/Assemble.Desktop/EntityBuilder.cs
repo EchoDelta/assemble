@@ -1,5 +1,4 @@
-﻿using System;
-using Assemble.Desktop.Components;
+﻿using Assemble.Desktop.Components;
 using Assemble.Desktop.Extensions;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
@@ -8,7 +7,7 @@ using MonoGame.Extended.Sprites;
 
 namespace Assemble.Desktop
 {
-    class EntityBuilder
+    public class EntityBuilder
     {
         private readonly TexturesManager _texturesManager;
 
@@ -40,6 +39,14 @@ namespace Assemble.Desktop
             entity.Attach(new Transform2((tileIndexX, tileIndexY).MapFromTileIndexToPoint()));
             entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
             entity.Attach(new MapTile(Color.LightBlue));
+            return entity;
+        }
+
+        public Entity BuildPlaceableItem(Entity entity, int initialTileIndexX, int initialTileIndexY, int size)
+        {
+            entity.Attach(new Transform2((initialTileIndexX, initialTileIndexY).MapFromTileIndexToPoint()));
+            entity.Attach(new GridBorder { GridSizeX = size, GridSizeY = size });
+            entity.Attach(new Placeable { GridSizeX = size, GridSizeY = size });
             return entity;
         }
     }

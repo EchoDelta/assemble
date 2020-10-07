@@ -25,7 +25,6 @@ namespace Assemble.Desktop
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            var asdf = new OrthographicCamera(GraphicsDevice);
             base.Initialize();
         }
 
@@ -41,6 +40,7 @@ namespace Assemble.Desktop
             _world = new WorldBuilder()
                 .AddSystem(new ControlSystem())
                 .AddSystem(new CameraSystem())
+                .AddSystem(new ItemPlacementSystem(entityBuilder, _camera))
                 .AddSystem(new RenderSystem(_spriteBatch, _camera))
                 .AddSystem(new MapRenderSystem(_spriteBatch, _camera, mapSize))
                 .Build();
@@ -57,8 +57,8 @@ namespace Assemble.Desktop
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            // if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //     Exit();
 
             _world.Update(gameTime);
 
