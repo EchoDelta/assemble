@@ -40,6 +40,10 @@ namespace Assemble.Desktop.Systems
             {
                 entityBuilder.BuildPlaceableItem(CreateEntity(), currentTile.x, currentTile.y, 5);
             }
+            else if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntityId.HasValue)
+            {
+                DestroyEntity(_currentPlaceableEntityId.Value);
+            }
 
             foreach (var entityId in ActiveEntities)
             {
