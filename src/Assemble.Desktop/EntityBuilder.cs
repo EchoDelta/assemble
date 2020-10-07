@@ -46,7 +46,7 @@ namespace Assemble.Desktop
         {
             entity.Attach(new Transform2((initialTileIndexX, initialTileIndexY).MapFromTileIndexToPoint()));
             entity.Attach(new GridBorder { GridSizeX = size, GridSizeY = size });
-            entity.Attach(new Placeable());
+            entity.Attach(new Placeable { GridSizeX = size, GridSizeY = size });
             return entity;
         }
     }

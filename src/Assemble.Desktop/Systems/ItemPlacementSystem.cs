@@ -6,6 +6,7 @@ using MonoGame.Extended.Input;
 using Assemble.Desktop.Extensions;
 using MonoGame.Extended;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Assemble.Desktop.Systems
 {
@@ -47,10 +48,11 @@ namespace Assemble.Desktop.Systems
 
             foreach (var entityId in ActiveEntities)
             {
+                var placeable = _placeableMapper.Get(entityId);
                 var transform = _transformMapper.Get(entityId);
                 if (transform != null)
                 {
-                    transform.Position = currentTile.MapFromTileIndexToPoint();
+                    transform.Position = currentTile.MapFromTileIndexToPoint() - new Vector2((float)Math.Floor(placeable.GridSizeX / 2.0f), (float)Math.Floor(placeable.GridSizeY / 2.0f));
                 }
             }
         }
