@@ -14,11 +14,11 @@ namespace Assemble.Desktop.Systems
     {
         private readonly SpriteBatch _spriteBatch;
         private readonly OrthographicCamera _camera;
-        private ComponentMapper<Transform2> _transformMapper;
+        private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<Sprite> _spriteMapper;
-        private ComponentMapper<GridBorder> _gridBorderMapper;
+        private ComponentMapper<TileBorder> _tileBorderMapper;
 
-        public RenderSystem(SpriteBatch spriteBatch, OrthographicCamera camera) : base(Aspect.All(typeof(Transform2)).One(typeof(Sprite), typeof(GridBorder)))
+        public RenderSystem(SpriteBatch spriteBatch, OrthographicCamera camera) : base(Aspect.All(typeof(TilePosition)).One(typeof(Sprite), typeof(TileBorder)))
         {
             _spriteBatch = spriteBatch;
             _camera = camera;
@@ -26,9 +26,9 @@ namespace Assemble.Desktop.Systems
 
         public override void Initialize(IComponentMapperService mapperService)
         {
-            _transformMapper = mapperService.GetMapper<Transform2>();
+            _tilePositionMapper = mapperService.GetMapper<TilePosition>();
             _spriteMapper = mapperService.GetMapper<Sprite>();
-            _gridBorderMapper = mapperService.GetMapper<GridBorder>();
+            _tileBorderMapper = mapperService.GetMapper<TileBorder>();
         }
 
         public override void Draw(GameTime gameTime)
@@ -36,24 +36,24 @@ namespace Assemble.Desktop.Systems
             _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
             foreach (var entity in ActiveEntities)
             {
-                var transform = _transformMapper.Get(entity).ToIsometric();
+                var tilePosition = _tilePositionMapper.Get(entity);
 
                 var sprite = _spriteMapper.Get(entity);
                 if (sprite != null)
                 {
-                    _spriteBatch.Draw(sprite, transform);
+                    _spriteBatch.Draw(sprite, (tilePosition.Position + new Vector2(tilePosition.TileSpan.X / 2.0f, tilePosition.TileSpan.Y / 2.0f)).ToIsometric());
                 }
 
-                var gridBorder = _gridBorderMapper.Get(entity);
-                if (gridBorder != null)
+                var tileBorder = _tileBorderMapper.Get(entity);
+                if (tileBorder != null)
                 {
                     _spriteBatch.DrawPolygon(
-                        transform.Position,
+                        tilePosition.Position.ToIsometric(),
                         new Polygon(new[]{
-                            (Vector2.UnitX * gridBorder.GridSizeX),
-                            (Vector2.UnitX * gridBorder.GridSizeX + Vector2.UnitY * gridBorder.GridSizeY),
-                            (Vector2.UnitY * gridBorder.GridSizeY),
-                            Vector2.Zero}.ToIsometric(true)),
+                            (Vector2.UnitX * tilePosition.TileSpan.X),
+                            (Vector2.UnitX * tilePosition.TileSpan.X + Vector2.UnitY * tilePosition.TileSpan.Y),
+                            (Vector2.UnitY * tilePosition.TileSpan.Y),
+                            Vector2.Zero}.ToIsometric()),
                         Color.HotPink,
                         5);
                 }

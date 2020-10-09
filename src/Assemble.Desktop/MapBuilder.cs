@@ -31,7 +31,7 @@ namespace Assemble.Desktop
             {
                 for (var y = 0; y < _mapSize; y++)
                 {
-                    _entityBuilder.BuildTile(_world.CreateEntity(), x, y);
+                    _entityBuilder.BuildTile(_world.CreateEntity(), (x, y));
                 }
             }
         }
@@ -49,7 +49,7 @@ namespace Assemble.Desktop
                 {
                     for (var y = oreFieldStartY; y < oreFieldStartY + sizeIronOreFields; y++)
                     {
-                        _entityBuilder.BuildIronOrePatch(_world.CreateEntity(), x, y);
+                        _entityBuilder.BuildIronOrePatch(_world.CreateEntity(), (x, y));
                     }
                 }
             }

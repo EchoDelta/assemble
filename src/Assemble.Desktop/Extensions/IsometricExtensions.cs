@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended;
 
 namespace Assemble.Desktop.Extensions
 {
@@ -9,24 +8,18 @@ namespace Assemble.Desktop.Extensions
         private const float IsometricTileWidth = 64f;
         private const float IsometricTileHeight = 32f;
 
-        public static Transform2 ToIsometric(this Transform2 tilePos)
+        public static Vector2 ToIsometric(this Vector2 tilePos)
         {
-            return new Transform2(tilePos.Position.ToIsometric());
-        }
-
-        public static Vector2 ToIsometric(this Vector2 tilePos, bool adjustFromCenter = false)
-        {
-            var adjustment = (adjustFromCenter ? -1 : 0) * new Vector2(0, IsometricTileHeight);
             return new Vector2(
                 (tilePos.X - tilePos.Y) * IsometricTileWidth,
-                (tilePos.X + tilePos.Y) * IsometricTileHeight) + adjustment;
+                (tilePos.X + tilePos.Y) * IsometricTileHeight);
         }
 
-        public static IEnumerable<Vector2> ToIsometric(this IEnumerable<Vector2> tilePoss, bool adjustFromCenter = false)
+        public static IEnumerable<Vector2> ToIsometric(this IEnumerable<Vector2> tilePositions)
         {
-            foreach (var tilePos in tilePoss)
+            foreach (var tilePos in tilePositions)
             {
-                yield return tilePos.ToIsometric(adjustFromCenter);
+                yield return tilePos.ToIsometric();
             }
         }
 

@@ -16,9 +16,9 @@ namespace Assemble.Desktop
             _texturesManager = texturesManager;
         }
 
-        public Entity BuildTile(Entity entity, int tileIndexX, int tileIndexY)
+        public Entity BuildTile(Entity entity, (int X, int Y) tileIndex)
         {
-            entity.Attach(new Transform2((tileIndexX, tileIndexY).MapFromTileIndexToPoint()));
+            entity.Attach(new TilePosition(tileIndex));
             entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Tile1, Texture.Tile2, Texture.Tile3, Texture.Tile4)));
             entity.Attach(new MapTile(Color.DarkGreen));
             return entity;
@@ -34,19 +34,27 @@ namespace Assemble.Desktop
             return entity;
         }
 
-        public Entity BuildIronOrePatch(Entity entity, int tileIndexX, int tileIndexY)
+        public Entity BuildIronOrePatch(Entity entity, (int X, int Y) tileIndex)
         {
-            entity.Attach(new Transform2((tileIndexX, tileIndexY).MapFromTileIndexToPoint()));
+            entity.Attach(new TilePosition(tileIndex));
             entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
             entity.Attach(new MapTile(Color.LightBlue));
             return entity;
         }
 
-        public Entity BuildPlaceableItem(Entity entity, int initialTileIndexX, int initialTileIndexY, int size)
+        public Entity BuildPlacementGuide(Entity entity, (int X, int Y) tileIndex, (int X, int Y) tileSpan)
         {
-            entity.Attach(new Transform2((initialTileIndexX, initialTileIndexY).MapFromTileIndexToPoint()));
-            entity.Attach(new GridBorder { GridSizeX = size, GridSizeY = size });
-            entity.Attach(new Placeable { GridSizeX = size, GridSizeY = size });
+            entity.Attach(new TilePosition(tileIndex, tileSpan));
+            entity.Attach(new TileBorder());
+            entity.Attach(new Placeable());
+            return entity;
+        }
+
+        public Entity BuildMiner(Entity entity, (int x, int y) tileIndex)
+        {
+            entity.Attach(new TilePosition(tileIndex, (2, 2)));
+            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Miner)));
+            entity.Attach(new MapTile(Color.DarkBlue));
             return entity;
         }
     }
