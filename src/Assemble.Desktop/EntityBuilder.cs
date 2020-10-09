@@ -42,11 +42,17 @@ namespace Assemble.Desktop
             return entity;
         }
 
-        public Entity BuildPlacementGuide(Entity entity, (int X, int Y) tileIndex, (int X, int Y) tileSpan)
+        public Entity BuildPlacementGuide(Entity entity)
         {
-            entity.Attach(new TilePosition(tileIndex, tileSpan));
             entity.Attach(new TileBorder());
             entity.Attach(new Placeable());
+            return entity;
+        }
+
+        public Entity RemovePlacementGuide(Entity entity)
+        {
+            entity.Detach<TileBorder>();
+            entity.Detach<Placeable>();
             return entity;
         }
 

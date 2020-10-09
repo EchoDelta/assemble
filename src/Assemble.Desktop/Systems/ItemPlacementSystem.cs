@@ -11,12 +11,13 @@ namespace Assemble.Desktop.Systems
 {
     public class ItemPlacementSystem : EntityUpdateSystem
     {
-        private int? _currentPlaceableEntityId;
+        private Entity _currentPlaceableEntity;
         private ComponentMapper<Placeable> _placeableMapper;
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private readonly EntityBuilder entityBuilder;
         private readonly OrthographicCamera camera;
         private MouseStateExtended _previousMouseState;
+
 
         public ItemPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera) : base(Aspect.All(typeof(Placeable)))
         {
@@ -42,58 +43,36 @@ namespace Assemble.Desktop.Systems
 
             if (keyboardState.IsKeyDown(Keys.D1))
             {
-                entityBuilder.BuildPlacementGuide(CreateEntity(), currentTile, currentSize);
+                if (_currentPlaceableEntity != null)
+                {
+                    DestroyEntity(_currentPlaceableEntity.Id);
+                }
+                _currentPlaceableEntity = entityBuilder.BuildMiner(CreateEntity(), currentTile);
+                entityBuilder.BuildPlacementGuide(_currentPlaceableEntity);
             }
-            else if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntityId.HasValue)
+            else if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntity != null)
             {
-                DestroyEntity(_currentPlaceableEntityId.Value);
+                DestroyEntity(_currentPlaceableEntity.Id);
+                _currentPlaceableEntity = null;
             }
 
-            if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed && _currentPlaceableEntityId.HasValue)
+            if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed && _currentPlaceableEntity != null)
             {
-                entityBuilder.BuildMiner(CreateEntity(), currentTile);
+                entityBuilder.RemovePlacementGuide(_currentPlaceableEntity);
+                _currentPlaceableEntity = null;
             }
 
             foreach (var entityId in ActiveEntities)
             {
                 var placeable = _placeableMapper.Get(entityId);
                 var tilePosition = _tilePositionMapper.Get(entityId);
-                if (tilePosition != null)
+                if (placeable != null && tilePosition != null)
                 {
                     tilePosition.ChangeTile(currentTile);
                 }
             }
 
             _previousMouseState = mouseState;
-        }
-
-        protected override void OnEntityAdded(int entityId)
-        {
-            var placeable = _placeableMapper.Get(entityId);
-            if (placeable != null)
-            {
-                if (_currentPlaceableEntityId.HasValue)
-                {
-                    DestroyEntity(_currentPlaceableEntityId.Value);
-                }
-                _currentPlaceableEntityId = entityId;
-            }
-
-            base.OnEntityAdded(entityId);
-        }
-
-        protected override void OnEntityRemoved(int entityId)
-        {
-            var placeable = _placeableMapper.Get(entityId);
-            if (placeable != null)
-            {
-                if (_currentPlaceableEntityId == entityId)
-                {
-                    _currentPlaceableEntityId = null;
-                }
-            }
-
-            base.OnEntityRemoved(entityId);
         }
     }
 }
