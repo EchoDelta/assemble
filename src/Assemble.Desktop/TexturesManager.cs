@@ -25,6 +25,7 @@ namespace Assemble.Desktop
 
             LoadTiles();
             LoadOre();
+            LoadMiner();
         }
 
         private void LoadTiles()
@@ -46,6 +47,14 @@ namespace Assemble.Desktop
             _textureMap.Add(Texture.IronOre1, atlas.GetRegion(0));
             _textureMap.Add(Texture.IronOre2, atlas.GetRegion(1));
             _textureMap.Add(Texture.IronOre3, atlas.GetRegion(2));
+        }
+
+        private void LoadMiner()
+        {
+            var texture = _contentManager.Load<Texture2D>("Miner");
+            var textureMap = _contentManager.Load<Dictionary<string, Rectangle>>("MinerMap");
+            var atlas = new TextureAtlas("MinerAtlas", texture, textureMap);
+            _textureMap.Add(Texture.Miner, atlas.GetRegion(0));
         }
 
         public TextureRegion2D GetTexture(params Texture[] textures)
