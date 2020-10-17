@@ -42,17 +42,12 @@ namespace Assemble.Desktop
             return entity;
         }
 
-        public Entity BuildPlacementGuide(Entity entity)
+        public Entity BuildPlacementGuide(Entity entity, Texture spriteTexture, (int X, int Y) tileIndex, (int X, int Y) tileSpan)
         {
-            entity.Attach(new TileBorder());
+            entity.Attach(new TilePosition(tileIndex, tileSpan));
+            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Miner)) { Alpha = 0.7f });
+            entity.Attach(new TileBorder() { Color = Color.LimeGreen });
             entity.Attach(new Placeable());
-            return entity;
-        }
-
-        public Entity RemovePlacementGuide(Entity entity)
-        {
-            entity.Detach<TileBorder>();
-            entity.Detach<Placeable>();
             return entity;
         }
 

@@ -54,7 +54,7 @@ namespace Assemble.Desktop.Systems
                             (Vector2.UnitX * tilePosition.TileSpan.X + Vector2.UnitY * tilePosition.TileSpan.Y),
                             (Vector2.UnitY * tilePosition.TileSpan.Y),
                             Vector2.Zero}.ToIsometric()),
-                        Color.HotPink,
+                        tileBorder.Color,
                         5);
                 }
 
