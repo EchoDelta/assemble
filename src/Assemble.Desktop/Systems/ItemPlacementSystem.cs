@@ -47,8 +47,7 @@ namespace Assemble.Desktop.Systems
                 {
                     DestroyEntity(_currentPlaceableEntity.Id);
                 }
-                _currentPlaceableEntity = entityBuilder.BuildMiner(CreateEntity(), currentTile);
-                entityBuilder.BuildPlacementGuide(_currentPlaceableEntity);
+                _currentPlaceableEntity = entityBuilder.BuildPlacementGuide(CreateEntity(), Texture.Miner, currentTile, currentSize);
             }
             else if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntity != null)
             {
@@ -58,8 +57,7 @@ namespace Assemble.Desktop.Systems
 
             if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed && _currentPlaceableEntity != null)
             {
-                entityBuilder.RemovePlacementGuide(_currentPlaceableEntity);
-                _currentPlaceableEntity = null;
+                entityBuilder.BuildMiner(CreateEntity(), currentTile);
             }
 
             foreach (var entityId in ActiveEntities)
