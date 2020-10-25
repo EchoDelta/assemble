@@ -42,7 +42,7 @@ namespace Assemble.Desktop
                 .AddSystem(new ControlSystem())
                 .AddSystem(new CameraSystem())
                 .AddSystem(new UnitGridOccupationSystem(gridManager))
-                .AddSystem(new ItemPlacementSystem(entityBuilder, _camera))
+                .AddSystem(new ItemPlacementSystem(entityBuilder, _camera, gridManager))
                 .AddSystem(new RenderSystem(_spriteBatch, _camera))
                 .AddSystem(new MapRenderSystem(_spriteBatch, _camera, mapSize))
                 .Build();

@@ -6,6 +6,7 @@ using MonoGame.Extended.Input;
 using Assemble.Desktop.Extensions;
 using MonoGame.Extended;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 namespace Assemble.Desktop.Systems
 {
@@ -14,21 +15,25 @@ namespace Assemble.Desktop.Systems
         private Entity _currentPlaceableEntity;
         private ComponentMapper<Placeable> _placeableMapper;
         private ComponentMapper<TilePosition> _tilePositionMapper;
-        private readonly EntityBuilder entityBuilder;
-        private readonly OrthographicCamera camera;
+        private ComponentMapper<TileBorder> _tileBorderMapper;
+        private readonly EntityBuilder _entityBuilder;
+        private readonly OrthographicCamera _camera;
+        private readonly GridManager _gridManager;
         private MouseStateExtended _previousMouseState;
 
 
-        public ItemPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera) : base(Aspect.All(typeof(Placeable)))
+        public ItemPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera, GridManager gridManager) : base(Aspect.All(typeof(Placeable)))
         {
-            this.camera = camera;
-            this.entityBuilder = entityBuilder;
+            _camera = camera;
+            _gridManager = gridManager;
+            _entityBuilder = entityBuilder;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
         {
             _placeableMapper = mapperService.GetMapper<Placeable>();
             _tilePositionMapper = mapperService.GetMapper<TilePosition>();
+            _tileBorderMapper = mapperService.GetMapper<TileBorder>();
         }
 
         public override void Update(GameTime gameTime)
@@ -36,10 +41,12 @@ namespace Assemble.Desktop.Systems
             var mouseState = MouseExtended.GetState();
             var keyboardState = KeyboardExtended.GetState();
 
-            var mousePosition = camera.ScreenToWorld(mouseState.Position.ToVector2()).FromIsometric();
+            var mousePosition = _camera.ScreenToWorld(mouseState.Position.ToVector2()).FromIsometric();
 
             var currentSize = (2, 2);
             var currentTile = mousePosition.MapFromCenterTilePointToTopRightTileIndex(currentSize);
+
+            var currentTileOccupied = _gridManager.GetUnitsInArea(currentTile, currentSize).Any();
 
             if (keyboardState.IsKeyDown(Keys.D1))
             {
@@ -47,7 +54,7 @@ namespace Assemble.Desktop.Systems
                 {
                     DestroyEntity(_currentPlaceableEntity.Id);
                 }
-                _currentPlaceableEntity = entityBuilder.BuildPlacementGuide(CreateEntity(), Texture.Miner, currentTile, currentSize);
+                _currentPlaceableEntity = _entityBuilder.BuildPlacementGuide(CreateEntity(), Texture.Miner, currentTile, currentSize);
             }
             else if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntity != null)
             {
@@ -55,19 +62,29 @@ namespace Assemble.Desktop.Systems
                 _currentPlaceableEntity = null;
             }
 
-            if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed && _currentPlaceableEntity != null)
+            if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed
+                && _currentPlaceableEntity != null && !currentTileOccupied)
             {
-                entityBuilder.BuildMiner(CreateEntity(), currentTile);
+                _entityBuilder.BuildMiner(CreateEntity(), currentTile);
             }
 
             foreach (var entityId in ActiveEntities)
             {
                 var placeable = _placeableMapper.Get(entityId);
                 var tilePosition = _tilePositionMapper.Get(entityId);
-                if (placeable != null && tilePosition != null)
+                var tileBorder = _tileBorderMapper.Get(entityId);
+
+                if (placeable == null)
+                {
+                    continue;
+                }
+
+                if (tilePosition != null)
                 {
                     tilePosition.ChangeTile(currentTile);
                 }
+
+                tileBorder.Color = currentTileOccupied ? Color.Red : Color.LimeGreen;
             }
 
             _previousMouseState = mouseState;
