@@ -34,13 +34,15 @@ namespace Assemble.Desktop
 
             var texturesManager = new TexturesManager(Content);
             var entityBuilder = new EntityBuilder(texturesManager);
+            var gridManager = new GridManager(mapSize, mapSize);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _camera = new OrthographicCamera(GraphicsDevice);
             _world = new WorldBuilder()
                 .AddSystem(new ControlSystem())
                 .AddSystem(new CameraSystem())
-                .AddSystem(new ItemPlacementSystem(entityBuilder, _camera))
+                .AddSystem(new UnitGridOccupationSystem(gridManager))
+                .AddSystem(new ItemPlacementSystem(entityBuilder, _camera, gridManager))
                 .AddSystem(new RenderSystem(_spriteBatch, _camera))
                 .AddSystem(new MapRenderSystem(_spriteBatch, _camera, mapSize))
                 .Build();
