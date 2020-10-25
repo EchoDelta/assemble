@@ -56,6 +56,7 @@ namespace Assemble.Desktop
             entity.Attach(new TilePosition(tileIndex, (2, 2)));
             entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Miner)));
             entity.Attach(new MapTile(Color.DarkBlue));
+            entity.Attach(new Unit());
             return entity;
         }
     }
