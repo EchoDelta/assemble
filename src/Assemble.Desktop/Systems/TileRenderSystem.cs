@@ -1,4 +1,7 @@
-﻿using Assemble.Desktop.Components;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Assemble.Desktop.Components;
+using Assemble.Desktop.Enums;
 using Assemble.Desktop.Extensions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,16 +13,19 @@ using MonoGame.Extended.Sprites;
 
 namespace Assemble.Desktop.Systems
 {
-    class RenderSystem : EntityDrawSystem
+    class TileRenderSystem : EntityDrawSystem
     {
         private readonly SpriteBatch _spriteBatch;
         private readonly OrthographicCamera _camera;
+        private readonly DepthHelper _depthHelper;
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<Sprite> _spriteMapper;
         private ComponentMapper<TileBorder> _tileBorderMapper;
+        private ComponentMapper<TileRenderLayer> _tileRenderLayerMapper;
 
-        public RenderSystem(SpriteBatch spriteBatch, OrthographicCamera camera) : base(Aspect.All(typeof(TilePosition)).One(typeof(Sprite), typeof(TileBorder)))
+        public TileRenderSystem(SpriteBatch spriteBatch, OrthographicCamera camera, DepthHelper depthHelper) : base(Aspect.All(typeof(TilePosition)).One(typeof(Sprite), typeof(TileBorder)))
         {
+            _depthHelper = depthHelper;
             _spriteBatch = spriteBatch;
             _camera = camera;
         }
@@ -29,18 +35,36 @@ namespace Assemble.Desktop.Systems
             _tilePositionMapper = mapperService.GetMapper<TilePosition>();
             _spriteMapper = mapperService.GetMapper<Sprite>();
             _tileBorderMapper = mapperService.GetMapper<TileBorder>();
+            _tileRenderLayerMapper = mapperService.GetMapper<TileRenderLayer>();
         }
 
         public override void Draw(GameTime gameTime)
         {
-            _spriteBatch.Begin(transformMatrix: _camera.GetViewMatrix());
-            foreach (var entity in ActiveEntities)
+            var layerGroups = ActiveEntities.GroupBy(entity => _tileRenderLayerMapper.Get(entity)?.Layer);
+
+            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.GroundTile));
+            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.Resources));
+            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.Units));
+            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.Overlay));
+            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == null));
+        }
+
+        private void DrawTileLayer(GameTime gameTime, IEnumerable<int> layerEntities)
+        {
+            if (layerEntities == null || !layerEntities.Any())
+            {
+                return;
+            }
+
+            _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, transformMatrix: _camera.GetViewMatrix());
+            foreach (var entity in layerEntities)
             {
                 var tilePosition = _tilePositionMapper.Get(entity);
 
                 var sprite = _spriteMapper.Get(entity);
                 if (sprite != null)
                 {
+                    sprite.Depth = _depthHelper.GetDepth(tilePosition);
                     _spriteBatch.Draw(sprite, (tilePosition.Position + new Vector2(tilePosition.TileSpan.X / 2.0f, tilePosition.TileSpan.Y / 2.0f)).ToIsometric());
                 }
 
@@ -57,7 +81,6 @@ namespace Assemble.Desktop.Systems
                         tileBorder.Color,
                         5);
                 }
-
             }
             _spriteBatch.End();
         }
