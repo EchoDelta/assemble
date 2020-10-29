@@ -10,5 +10,9 @@ namespace Assemble.Desktop
         IronOre2,
         IronOre3,
         Miner,
+        ConveyorBeltNE,
+        ConveyorBeltNW,
+        ConveyorBeltSW,
+        ConveyorBeltSE,
     }
 }
