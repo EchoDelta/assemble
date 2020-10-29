@@ -13,17 +13,19 @@ namespace Assemble.Desktop.Systems
     {
         private readonly SpriteBatch _spriteBatch;
         private readonly OrthographicCamera _camera;
-        private readonly int _worlMapSize;
+        private readonly (int x, int y) _worldMapSize;
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<MapTile> _mapTileMapper;
 
-        private const float MapTileSize = 1.5f;
+        private readonly float _mapTileSize;
+        private const float MiniMapSizeWidth = 300;
 
-        public MapRenderSystem(SpriteBatch spriteBatch, OrthographicCamera camera, int worlMapSize) : base(Aspect.All(typeof(MapTile), typeof(TilePosition)))
+        public MapRenderSystem(SpriteBatch spriteBatch, OrthographicCamera camera, int worldMapSize) : base(Aspect.All(typeof(MapTile), typeof(TilePosition)))
         {
             _spriteBatch = spriteBatch;
             _camera = camera;
-            _worlMapSize = worlMapSize;
+            _worldMapSize = (worldMapSize, worldMapSize);
+            _mapTileSize = MiniMapSizeWidth * _worldMapSize.x;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -40,10 +42,11 @@ namespace Assemble.Desktop.Systems
 
         private void DrawIsometricMapAndViewport()
         {
+            var worldHyptothenus = Math.Sqrt(_worldMapSize.x * _worldMapSize.x + _worldMapSize.y * _worldMapSize.y);
             _spriteBatch.Begin(transformMatrix:
                 Matrix.CreateRotationZ((float)Math.PI / 4) *
-                Matrix.CreateTranslation((float)Math.Sqrt(_worlMapSize * _worlMapSize / 2.0f), 0, 0) *
-                Matrix.CreateScale(MapTileSize, 0.5f * MapTileSize, 1f));
+                Matrix.CreateTranslation((float)worldHyptothenus / 2, 0, 0) *
+                Matrix.CreateScale((float)(MiniMapSizeWidth / worldHyptothenus), 0.5f * (float)(MiniMapSizeWidth / worldHyptothenus), 1f));
 
             foreach (var entity in ActiveEntities)
             {
@@ -56,7 +59,7 @@ namespace Assemble.Desktop.Systems
             var cameraTopRight = new Vector2(_camera.BoundingRectangle.Right, _camera.BoundingRectangle.Top).FromIsometric();
             var cameraBottomLeft = new Vector2(_camera.BoundingRectangle.Left, _camera.BoundingRectangle.Bottom).FromIsometric();
             var cameraBottomRight = new Vector2(_camera.BoundingRectangle.Right, _camera.BoundingRectangle.Bottom).FromIsometric();
-            _spriteBatch.DrawPolygon(Vector2.Zero, new[] { cameraTopLeft, cameraTopRight, cameraBottomRight, cameraBottomLeft, cameraTopLeft }, Color.White, 2f / MapTileSize);
+            _spriteBatch.DrawPolygon(Vector2.Zero, new[] { cameraTopLeft, cameraTopRight, cameraBottomRight, cameraBottomLeft, cameraTopLeft }, Color.White, 1.1f);
 
             _spriteBatch.End();
         }
@@ -64,8 +67,7 @@ namespace Assemble.Desktop.Systems
         private void DrawBackdrop()
         {
             _spriteBatch.Begin();
-            _spriteBatch.FillRectangle(0, 0, (float)(2.0f * MapTileSize * Math.Sqrt(_worlMapSize * _worlMapSize / 2.0f)),
-                (float)(MapTileSize * Math.Sqrt(_worlMapSize * _worlMapSize / 2.0f)), Color.CornflowerBlue);
+            _spriteBatch.FillRectangle(0, 0, MiniMapSizeWidth, 0.5f * MiniMapSizeWidth, Color.CornflowerBlue);
             _spriteBatch.End();
         }
     }
