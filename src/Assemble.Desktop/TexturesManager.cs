@@ -57,7 +57,7 @@ namespace Assemble.Desktop
             _textureMap.Add(Texture.Miner, atlas.GetRegion(0));
         }
 
-        public TextureRegion2D GetTexture(params Texture[] textures)
+        public TextureRegion2D GetRandomTexture(params Texture[] textures)
         {
             if (textures.Length == 0)
             {

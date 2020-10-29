@@ -20,7 +20,7 @@ namespace Assemble.Desktop
         public Entity BuildTile(Entity entity, (int X, int Y) tileIndex)
         {
             entity.Attach(new TilePosition(tileIndex));
-            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Tile1, Texture.Tile2, Texture.Tile3, Texture.Tile4)));
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.Tile1, Texture.Tile2, Texture.Tile3, Texture.Tile4)));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.GroundTile));
             entity.Attach(new MapTile(Color.DarkGreen));
             return entity;
@@ -39,7 +39,7 @@ namespace Assemble.Desktop
         public Entity BuildIronOrePatch(Entity entity, (int X, int Y) tileIndex)
         {
             entity.Attach(new TilePosition(tileIndex));
-            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Resources));
             entity.Attach(new MapTile(Color.LightBlue));
             return entity;
@@ -48,7 +48,7 @@ namespace Assemble.Desktop
         public Entity BuildPlacementGuide(Entity entity, Texture spriteTexture, (int X, int Y) tileIndex, (int X, int Y) tileSpan)
         {
             entity.Attach(new TilePosition(tileIndex, tileSpan));
-            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Miner)) { Alpha = 0.7f });
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.Miner)) { Alpha = 0.7f });
             entity.Attach(new TileBorder() { Color = Color.LimeGreen });
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Overlay));
             entity.Attach(new Placeable());
@@ -58,7 +58,7 @@ namespace Assemble.Desktop
         public Entity BuildMiner(Entity entity, (int x, int y) tileIndex)
         {
             entity.Attach(new TilePosition(tileIndex, (2, 2)));
-            entity.Attach(new Sprite(_texturesManager.GetTexture(Texture.Miner)));
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.Miner)));
             entity.Attach(new MapTile(Color.DarkBlue));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit());
