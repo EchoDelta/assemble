@@ -1,6 +1,7 @@
 ﻿using Assemble.Desktop.Components;
 using Assemble.Desktop.Enums;
 using Assemble.Desktop.Extensions;
+using Assemble.Desktop.UnitConfiguration;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended;
 using MonoGame.Extended.Entities;
@@ -48,20 +49,20 @@ namespace Assemble.Desktop
         public Entity BuildPlacementGuide(Entity entity, Texture spriteTexture, (int X, int Y) tileIndex, (int X, int Y) tileSpan)
         {
             entity.Attach(new TilePosition(tileIndex, tileSpan));
-            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.Miner)) { Alpha = 0.7f });
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(spriteTexture)) { Alpha = 0.7f });
             entity.Attach(new TileBorder() { Color = Color.LimeGreen });
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Overlay));
             entity.Attach(new Placeable());
             return entity;
         }
 
-        public Entity BuildMiner(Entity entity, (int x, int y) tileIndex)
+        public Entity BuildUnit(Entity entity, (int x, int y) tileIndex, IUnitConfig unitConfig)
         {
-            entity.Attach(new TilePosition(tileIndex, (2, 2)));
-            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.Miner)));
-            entity.Attach(new MapTile(Color.DarkBlue));
+            entity.Attach(new TilePosition(tileIndex, unitConfig.TileSpan));
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(unitConfig.Texture)));
+            entity.Attach(new MapTile(unitConfig.MiniMapColor));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
-            entity.Attach(new Unit());
+            entity.Attach(new Unit(unitConfig.UnitType));
             return entity;
         }
     }

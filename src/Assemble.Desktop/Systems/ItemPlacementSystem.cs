@@ -7,12 +7,14 @@ using Assemble.Desktop.Extensions;
 using MonoGame.Extended;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
+using Assemble.Desktop.UnitConfiguration;
 
 namespace Assemble.Desktop.Systems
 {
     public class ItemPlacementSystem : EntityUpdateSystem
     {
         private Entity _currentPlaceableEntity;
+        private IUnitConfig _currentPlaceableUnitConfig;
         private ComponentMapper<Placeable> _placeableMapper;
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<TileBorder> _tileBorderMapper;
@@ -43,29 +45,27 @@ namespace Assemble.Desktop.Systems
 
             var mousePosition = _camera.ScreenToWorld(mouseState.Position.ToVector2()).FromIsometric();
 
-            var currentSize = (2, 2);
-            var currentTile = mousePosition.MapFromCenterTilePointToTopRightTileIndex(currentSize);
-
-            var currentTileOccupied = _gridManager.GetUnitsInArea(currentTile, currentSize).Any();
+            (int, int) currentTile = mousePosition.MapFromCenterTilePointToTopRightTileIndex(_currentPlaceableUnitConfig?.TileSpan ?? (1, 1));
 
             if (keyboardState.IsKeyDown(Keys.D1))
             {
-                if (_currentPlaceableEntity != null)
-                {
-                    DestroyEntity(_currentPlaceableEntity.Id);
-                }
-                _currentPlaceableEntity = _entityBuilder.BuildPlacementGuide(CreateEntity(), Texture.Miner, currentTile, currentSize);
+                MakeNewPlacementGuide(new MinerUnitConfig(), currentTile);
+            }
+            if (keyboardState.IsKeyDown(Keys.D2))
+            {
+                MakeNewPlacementGuide(new ConveyorBeltUnitConfig(), currentTile);
             }
             else if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntity != null)
             {
-                DestroyEntity(_currentPlaceableEntity.Id);
-                _currentPlaceableEntity = null;
+                ClearPlacementGuide();
             }
+
+            var currentTileOccupied = _gridManager.GetUnitsInArea(currentTile, _currentPlaceableUnitConfig?.TileSpan ?? (1, 1)).Any();
 
             if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed
                 && _currentPlaceableEntity != null && !currentTileOccupied)
             {
-                _entityBuilder.BuildMiner(CreateEntity(), currentTile);
+                _entityBuilder.BuildUnit(CreateEntity(), currentTile, _currentPlaceableUnitConfig);
             }
 
             foreach (var entityId in ActiveEntities)
@@ -88,6 +88,23 @@ namespace Assemble.Desktop.Systems
             }
 
             _previousMouseState = mouseState;
+        }
+
+        private void MakeNewPlacementGuide(IUnitConfig unitConfig, (int, int) currentTile)
+        {
+            _currentPlaceableUnitConfig = unitConfig;
+            if (_currentPlaceableEntity != null)
+            {
+                DestroyEntity(_currentPlaceableEntity.Id);
+            }
+            _currentPlaceableEntity = _entityBuilder.BuildPlacementGuide(CreateEntity(), _currentPlaceableUnitConfig.Texture, currentTile, _currentPlaceableUnitConfig.TileSpan);
+        }
+
+        private void ClearPlacementGuide()
+        {
+            _currentPlaceableUnitConfig = null;
+            DestroyEntity(_currentPlaceableEntity.Id);
+            _currentPlaceableEntity = null;
         }
     }
 }
