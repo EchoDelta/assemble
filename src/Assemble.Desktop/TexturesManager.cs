@@ -26,6 +26,7 @@ namespace Assemble.Desktop
             LoadTiles();
             LoadOre();
             LoadMiner();
+            LoadConveyorBelt();
         }
 
         private void LoadTiles()
@@ -57,7 +58,18 @@ namespace Assemble.Desktop
             _textureMap.Add(Texture.Miner, atlas.GetRegion(0));
         }
 
-        public TextureRegion2D GetTexture(params Texture[] textures)
+        private void LoadConveyorBelt()
+        {
+            var texture = _contentManager.Load<Texture2D>("ConveyorBelt");
+            var textureMap = _contentManager.Load<Dictionary<string, Rectangle>>("ConveyorBeltMap");
+            var atlas = new TextureAtlas("ConveyorBeltAtlas", texture, textureMap);
+            _textureMap.Add(Texture.ConveyorBeltNE, atlas.GetRegion(0));
+            _textureMap.Add(Texture.ConveyorBeltNW, atlas.GetRegion(1));
+            _textureMap.Add(Texture.ConveyorBeltSW, atlas.GetRegion(2));
+            _textureMap.Add(Texture.ConveyorBeltSE, atlas.GetRegion(1));
+        }
+
+        public TextureRegion2D GetRandomTexture(params Texture[] textures)
         {
             if (textures.Length == 0)
             {

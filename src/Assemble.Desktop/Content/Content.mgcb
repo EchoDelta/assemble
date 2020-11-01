@@ -13,6 +13,23 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ConveyorBelt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ConveyorBelt.png
+
+#begin ConveyorBeltMap.xml
+/importer:XmlImporter
+/processor:PassThroughProcessor
+/build:ConveyorBeltMap.xml
+
 #begin Miner.png
 /importer:TextureImporter
 /processor:TextureProcessor
