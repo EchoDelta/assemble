@@ -11,20 +11,21 @@ using Assemble.Desktop.UnitConfiguration;
 
 namespace Assemble.Desktop.Systems
 {
-    public class ItemPlacementSystem : EntityUpdateSystem
+    public class UnitPlacementSystem : EntityUpdateSystem
     {
         private Entity _currentPlaceableEntity;
         private IUnitConfig _currentPlaceableUnitConfig;
         private ComponentMapper<Placeable> _placeableMapper;
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<TileBorder> _tileBorderMapper;
+        private ComponentMapper<Unit> _unitMapper;
         private readonly EntityBuilder _entityBuilder;
         private readonly OrthographicCamera _camera;
         private readonly GridManager _gridManager;
         private MouseStateExtended _previousMouseState;
 
 
-        public ItemPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera, GridManager gridManager) : base(Aspect.All(typeof(Placeable)))
+        public UnitPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera, GridManager gridManager) : base(Aspect.All(typeof(Placeable)))
         {
             _camera = camera;
             _gridManager = gridManager;
@@ -36,6 +37,7 @@ namespace Assemble.Desktop.Systems
             _placeableMapper = mapperService.GetMapper<Placeable>();
             _tilePositionMapper = mapperService.GetMapper<TilePosition>();
             _tileBorderMapper = mapperService.GetMapper<TileBorder>();
+            _unitMapper = mapperService.GetMapper<Unit>();
         }
 
         public override void Update(GameTime gameTime)
@@ -60,7 +62,7 @@ namespace Assemble.Desktop.Systems
                 ClearPlacementGuide();
             }
 
-            var currentTileOccupied = _gridManager.GetUnitsInArea(currentTile, _currentPlaceableUnitConfig?.TileSpan ?? (1, 1)).Any();
+            var currentTileOccupied = IsCurrentTileOccupied(currentTile);
 
             if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed
                 && _currentPlaceableEntity != null && !currentTileOccupied)
@@ -88,6 +90,11 @@ namespace Assemble.Desktop.Systems
             }
 
             _previousMouseState = mouseState;
+        }
+
+        private bool IsCurrentTileOccupied((int, int) currentTile)
+        {
+            return _gridManager.GetItemsInArea(currentTile, _currentPlaceableUnitConfig?.TileSpan ?? (1, 1)).Any(item => _unitMapper.Has(item));
         }
 
         private void MakeNewPlacementGuide(IUnitConfig unitConfig, (int, int) currentTile)

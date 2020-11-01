@@ -19,7 +19,7 @@ namespace Assemble.Desktop
             }
         }
 
-        public bool AddUnit(int entityId, (int x, int y) tile, (int x, int y) tileSpan)
+        public bool AddItem(int entityId, (int x, int y) tile, (int x, int y) tileSpan)
         {
             if (tile.x < 0 || tile.y < 0 || tile.x + tileSpan.x > entities.GetLength(0) || tile.y + tileSpan.y > entities.GetLength(1))
             {
@@ -36,7 +36,7 @@ namespace Assemble.Desktop
             return true;
         }
 
-        public int[] GetUnitsInArea((int x, int y) tile, (int x, int y) tileSpan)
+        public int[] GetItemsInArea((int x, int y) tile, (int x, int y) tileSpan)
         {
             var units = new List<int>();
             for (var x = Math.Max(0, tile.x); x < Math.Min(entities.GetLength(0), tile.x + tileSpan.x); x++)
