@@ -40,31 +40,16 @@ namespace Assemble.Desktop.Systems
 
         public override void Draw(GameTime gameTime)
         {
-            var layerGroups = ActiveEntities.GroupBy(entity => _tileRenderLayerMapper.Get(entity)?.Layer);
-
-            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.GroundTile));
-            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.Resources));
-            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.Units));
-            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == TileRenderLayerType.Overlay));
-            DrawTileLayer(gameTime, layerGroups.SingleOrDefault(g => g.Key == null));
-        }
-
-        private void DrawTileLayer(GameTime gameTime, IEnumerable<int> layerEntities)
-        {
-            if (layerEntities == null || !layerEntities.Any())
-            {
-                return;
-            }
-
             _spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack, transformMatrix: _camera.GetViewMatrix());
-            foreach (var entity in layerEntities)
+            foreach (var entity in ActiveEntities)
             {
                 var tilePosition = _tilePositionMapper.Get(entity);
+                var layer = _tileRenderLayerMapper.Get(entity);
 
                 var sprite = _spriteMapper.Get(entity);
                 if (sprite != null)
                 {
-                    sprite.Depth = _depthHelper.GetDepth(tilePosition);
+                    sprite.Depth = _depthHelper.GetDepth(tilePosition, layer);
                     _spriteBatch.Draw(sprite, (tilePosition.Position + new Vector2(tilePosition.TileSpan.X / 2.0f, tilePosition.TileSpan.Y / 2.0f)).ToIsometric());
                 }
 
@@ -79,7 +64,7 @@ namespace Assemble.Desktop.Systems
                             (Vector2.UnitY * tilePosition.TileSpan.Y),
                             Vector2.Zero}.ToIsometric()),
                         tileBorder.Color,
-                        5);
+                        5, _depthHelper.GetDepth(tilePosition, layer));
                 }
             }
             _spriteBatch.End();
