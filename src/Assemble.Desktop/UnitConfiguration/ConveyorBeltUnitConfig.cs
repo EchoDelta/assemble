@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace Assemble.Desktop.UnitConfiguration
 {
@@ -8,5 +9,7 @@ namespace Assemble.Desktop.UnitConfiguration
         public Texture Texture => Texture.ConveyorBeltNE;
         public (int x, int y) TileSpan => (1, 1);
         public Color MiniMapColor => Color.Gold;
+
+        public TimeSpan? ProductionSpeed => null;
     }
 }

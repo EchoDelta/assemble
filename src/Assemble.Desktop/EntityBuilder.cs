@@ -39,6 +39,7 @@ namespace Assemble.Desktop
 
         public Entity BuildIronOrePatch(Entity entity, (int X, int Y) tileIndex)
         {
+            entity.Attach(new MineableResource() { Amount = 1 });
             entity.Attach(new TilePosition(tileIndex));
             entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Resources));
@@ -65,6 +66,10 @@ namespace Assemble.Desktop
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit(unitConfig.UnitType));
             entity.Attach(new Spacial());
+            if (unitConfig.ProductionSpeed.HasValue)
+            {
+                entity.Attach(new ProductionUnit(unitConfig.ProductionSpeed.Value));
+            }
             return entity;
         }
     }
