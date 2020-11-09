@@ -66,6 +66,10 @@ namespace Assemble.Desktop
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit(unitConfig.UnitType));
             entity.Attach(new Spacial());
+            if (unitConfig.ProductionSpeed.HasValue)
+            {
+                entity.Attach(new ProductionUnit(unitConfig.ProductionSpeed.Value));
+            }
             return entity;
         }
     }
