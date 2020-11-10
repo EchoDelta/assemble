@@ -5,6 +5,7 @@
         GroundTile,
         Resources,
         Units,
+        Products,
         Overlay
     }
 }
