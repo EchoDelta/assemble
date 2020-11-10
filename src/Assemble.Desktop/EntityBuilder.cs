@@ -1,4 +1,5 @@
-﻿using Assemble.Desktop.Components;
+﻿using System;
+using Assemble.Desktop.Components;
 using Assemble.Desktop.Enums;
 using Assemble.Desktop.Extensions;
 using Assemble.Desktop.UnitConfiguration;
@@ -66,10 +67,16 @@ namespace Assemble.Desktop
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit(unitConfig.UnitType));
             entity.Attach(new Spacial());
-            if (unitConfig.ProductionSpeed.HasValue)
+            if (unitConfig.ProductionSpeed.HasValue || unitConfig.OutputBufferSize.HasValue)
             {
-                entity.Attach(new ProductionUnit(unitConfig.ProductionSpeed.Value));
+                entity.Attach(new ProductionUnit(unitConfig.ProductionSpeed ?? TimeSpan.FromSeconds(60), unitConfig.OutputBufferSize ?? 1));
             }
+            return entity;
+        }
+
+        public Entity BuildProduct(Entity entity, ProductType productType)
+        {
+            entity.Attach(new Product(productType));
             return entity;
         }
     }

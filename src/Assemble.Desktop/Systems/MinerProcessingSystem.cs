@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assemble.Desktop.Components;
+using Assemble.Desktop.Enums;
 using Assemble.Desktop.Extensions;
 using Assemble.Desktop.UnitConfiguration;
 using Microsoft.Xna.Framework;
@@ -13,15 +14,16 @@ namespace Assemble.Desktop.Systems
     public class MinerProcessingSystem : EntityProcessingSystem
     {
         private readonly GridManager _gridManager;
-
+        private readonly EntityBuilder _entityBuilder;
         private ComponentMapper<Unit> _unitMapper;
         private ComponentMapper<ProductionUnit> _productionUnitMapper;
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<MineableResource> _mineableResourceMapper;
 
-        public MinerProcessingSystem(GridManager gridManager) : base(Aspect.All(typeof(Unit), typeof(ProductionUnit), typeof(TilePosition)))
+        public MinerProcessingSystem(GridManager gridManager, EntityBuilder entityBuilder) : base(Aspect.All(typeof(Unit), typeof(ProductionUnit), typeof(TilePosition)))
         {
             _gridManager = gridManager;
+            _entityBuilder = entityBuilder;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -68,11 +70,13 @@ namespace Assemble.Desktop.Systems
             var random = new Random();
 
             activeMineableResources[random.Next(0, activeMineableResources.Count())].Amount--;
+            var product = _entityBuilder.BuildProduct(CreateEntity(), ProductType.IronOre);
+            productionUnit.OutputBuffer.Add(product.Id);
         }
 
         private void SetProductionUnitActive(ProductionUnit productionUnit, IEnumerable<MineableResource> activeMineableResources)
         {
-            productionUnit.ProductionActive = activeMineableResources.Any();
+            productionUnit.ProductionActive = productionUnit.OutputBuffer.Count < productionUnit.OutputBufferSize && activeMineableResources.Any();
         }
     }
 }

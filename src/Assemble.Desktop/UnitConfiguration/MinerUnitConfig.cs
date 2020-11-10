@@ -10,5 +10,6 @@ namespace Assemble.Desktop.UnitConfiguration
         public (int x, int y) TileSpan => (2, 2);
         public Color MiniMapColor => Color.DarkBlue;
         public TimeSpan? ProductionSpeed => TimeSpan.FromSeconds(5);
+        public int? OutputBufferSize => 3;
     }
 }

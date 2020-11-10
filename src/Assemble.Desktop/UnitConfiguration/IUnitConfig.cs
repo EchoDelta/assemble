@@ -10,5 +10,6 @@ namespace Assemble.Desktop.UnitConfiguration
         (int x, int y) TileSpan { get; }
         Color MiniMapColor { get; }
         TimeSpan? ProductionSpeed { get; }
+        int? OutputBufferSize { get; }
     }
 }

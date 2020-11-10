@@ -43,7 +43,7 @@ namespace Assemble.Desktop
                 .AddSystem(new CameraSystem())
                 .AddSystem(new SpacialTilePositionSystem(gridManager))
                 .AddSystem(new UnitPlacementSystem(entityBuilder, _camera, gridManager))
-                .AddSystem(new MinerProcessingSystem(gridManager))
+                .AddSystem(new MinerProcessingSystem(gridManager, entityBuilder))
                 .AddSystem(new MineableResourceSystem())
                 .AddSystem(new TileRenderSystem(_spriteBatch, _camera, new DepthHelper((mapSize, mapSize))))
                 .AddSystem(new MapRenderSystem(_spriteBatch, _camera, mapSize))
