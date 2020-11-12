@@ -77,6 +77,8 @@ namespace Assemble.Desktop
         public Entity BuildProduct(Entity entity, ProductType productType)
         {
             entity.Attach(new Product(productType));
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
+            entity.Attach(new TileRenderLayer(TileRenderLayerType.Products));
             return entity;
         }
     }
