@@ -11,5 +11,6 @@ namespace Assemble.Desktop.UnitConfiguration
         Color MiniMapColor { get; }
         TimeSpan? ProductionSpeed { get; }
         int? OutputBufferSize { get; }
+        public bool Blockable { get; }
     }
 }

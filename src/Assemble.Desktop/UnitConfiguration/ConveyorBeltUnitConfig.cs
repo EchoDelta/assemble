@@ -11,5 +11,6 @@ namespace Assemble.Desktop.UnitConfiguration
         public Color MiniMapColor => Color.Gold;
         public TimeSpan? ProductionSpeed => null;
         public int? OutputBufferSize => null;
+        public bool Blockable => false;
     }
 }

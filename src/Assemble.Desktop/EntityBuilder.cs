@@ -71,6 +71,10 @@ namespace Assemble.Desktop
             {
                 entity.Attach(new ProductionUnit(unitConfig.ProductionSpeed ?? TimeSpan.FromSeconds(60), unitConfig.OutputBufferSize ?? 1));
             }
+            if (unitConfig.Blockable)
+            {
+                entity.Attach(new Blockable());
+            }
             return entity;
         }
 
