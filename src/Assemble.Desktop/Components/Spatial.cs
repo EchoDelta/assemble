@@ -1,6 +1,6 @@
 namespace Assemble.Desktop.Components
 {
-    public class Spacial
+    public class Spatial
     {
 
     }

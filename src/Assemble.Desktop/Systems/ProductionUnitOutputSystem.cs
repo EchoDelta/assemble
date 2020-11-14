@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Assemble.Desktop.Components;
+using Assemble.Desktop.Positioning;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
@@ -12,11 +13,11 @@ namespace Assemble.Desktop.Systems
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<Blockable> _blockableMapper;
         private ComponentMapper<Product> _productMapper;
-        private readonly GridManager _gridManager;
+        private readonly TileOccupationManager _tileOccupationManager;
 
-        public ProductionUnitOutputSystem(GridManager gridManager) : base(Aspect.All(typeof(ProductionUnit), typeof(TilePosition)))
+        public ProductionUnitOutputSystem(TileOccupationManager tileOccupationManager) : base(Aspect.All(typeof(ProductionUnit), typeof(TilePosition)))
         {
-            _gridManager = gridManager;
+            _tileOccupationManager = tileOccupationManager;
         }
 
         public override void Initialize(IComponentMapperService mapperService)
@@ -48,12 +49,11 @@ namespace Assemble.Desktop.Systems
             productionUnit.OutputBuffer.RemoveAt(0);
             var outputProductEntity = GetEntity(outputProductEntityId);
             outputProductEntity.Attach(outputPosition);
-            _gridManager.AddItem(outputProductEntity.Id, ((int)outputPosition.Position.X, (int)outputPosition.Position.Y), (1, 1));
         }
 
         private bool OutputPositionIsOccupied(TilePosition outputPosition)
         {
-            return _gridManager.GetItemsInArea(((int)outputPosition.Position.X, (int)outputPosition.Position.Y), (1, 1)).Any(ie => _blockableMapper.Has(ie) || _productMapper.Has(ie));
+            return _tileOccupationManager.GetItemsInArea(outputPosition.GetArea()).Any(ie => _blockableMapper.Has(ie) || _productMapper.Has(ie));
         }
     }
 }

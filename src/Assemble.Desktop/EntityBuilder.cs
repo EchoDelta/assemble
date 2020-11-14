@@ -45,7 +45,7 @@ namespace Assemble.Desktop
             entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Resources));
             entity.Attach(new MapTile(Color.LightBlue));
-            entity.Attach(new Spacial());
+            entity.Attach(new Spatial());
             return entity;
         }
 
@@ -66,7 +66,7 @@ namespace Assemble.Desktop
             entity.Attach(new MapTile(unitConfig.MiniMapColor));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit(unitConfig.UnitType));
-            entity.Attach(new Spacial());
+            entity.Attach(new Spatial());
             if (unitConfig.ProductionSpeed.HasValue || unitConfig.OutputBufferSize.HasValue)
             {
                 entity.Attach(new ProductionUnit(unitConfig.ProductionSpeed ?? TimeSpan.FromSeconds(60), unitConfig.OutputBufferSize ?? 1));
@@ -83,6 +83,7 @@ namespace Assemble.Desktop
             entity.Attach(new Product(productType));
             entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Products));
+            entity.Attach(new Spatial());
             return entity;
         }
     }

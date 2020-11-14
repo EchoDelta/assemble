@@ -8,6 +8,7 @@ using MonoGame.Extended;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using Assemble.Desktop.UnitConfiguration;
+using Assemble.Desktop.Positioning;
 
 namespace Assemble.Desktop.Systems
 {
@@ -21,14 +22,14 @@ namespace Assemble.Desktop.Systems
         private ComponentMapper<Unit> _unitMapper;
         private readonly EntityBuilder _entityBuilder;
         private readonly OrthographicCamera _camera;
-        private readonly GridManager _gridManager;
+        private readonly TileOccupationManager _tileOccupationManager;
         private MouseStateExtended _previousMouseState;
 
 
-        public UnitPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera, GridManager gridManager) : base(Aspect.All(typeof(Placeable)))
+        public UnitPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera, TileOccupationManager tileOccupationManager) : base(Aspect.All(typeof(Placeable)))
         {
             _camera = camera;
-            _gridManager = gridManager;
+            _tileOccupationManager = tileOccupationManager;
             _entityBuilder = entityBuilder;
         }
 
@@ -92,9 +93,10 @@ namespace Assemble.Desktop.Systems
             _previousMouseState = mouseState;
         }
 
-        private bool IsCurrentTileOccupied((int, int) currentTile)
+        private bool IsCurrentTileOccupied((int x, int y) currentTile)
         {
-            return _gridManager.GetItemsInArea(currentTile, _currentPlaceableUnitConfig?.TileSpan ?? (1, 1)).Any(item => _unitMapper.Has(item));
+            var (tileSpanX, tileSpanY) = _currentPlaceableUnitConfig?.TileSpan ?? (1, 1);
+            return _tileOccupationManager.GetItemsInArea(new RectangleF(currentTile.x, currentTile.y, tileSpanX, tileSpanY)).Any(item => _unitMapper.Has(item));
         }
 
         private void MakeNewPlacementGuide(IUnitConfig unitConfig, (int, int) currentTile)

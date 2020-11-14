@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assemble.Desktop.Components;
 using Assemble.Desktop.Enums;
-using Assemble.Desktop.Extensions;
+using Assemble.Desktop.Positioning;
 using Assemble.Desktop.UnitConfiguration;
 using Microsoft.Xna.Framework;
 using MonoGame.Extended.Entities;
@@ -13,16 +13,16 @@ namespace Assemble.Desktop.Systems
 {
     public class MinerProcessingSystem : EntityProcessingSystem
     {
-        private readonly GridManager _gridManager;
+        private readonly TileOccupationManager _tileOccupationManager;
         private readonly EntityBuilder _entityBuilder;
         private ComponentMapper<Unit> _unitMapper;
         private ComponentMapper<ProductionUnit> _productionUnitMapper;
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<MineableResource> _mineableResourceMapper;
 
-        public MinerProcessingSystem(GridManager gridManager, EntityBuilder entityBuilder) : base(Aspect.All(typeof(Unit), typeof(ProductionUnit), typeof(TilePosition)))
+        public MinerProcessingSystem(TileOccupationManager tileOccupationManager, EntityBuilder entityBuilder) : base(Aspect.All(typeof(Unit), typeof(ProductionUnit), typeof(TilePosition)))
         {
-            _gridManager = gridManager;
+            _tileOccupationManager = tileOccupationManager;
             _entityBuilder = entityBuilder;
         }
 
@@ -62,7 +62,7 @@ namespace Assemble.Desktop.Systems
 
         private IEnumerable<MineableResource> GetActiveMineableResources(TilePosition tilePosition)
         {
-            return _gridManager.GetItemsInArea(tilePosition.Position.ToTileIndex(), tilePosition.TileSpan).Select(i => _mineableResourceMapper.Get(i)).Where(r => r != null);
+            return _tileOccupationManager.GetItemsInArea(tilePosition.GetArea()).Select(i => _mineableResourceMapper.Get(i)).Where(r => r != null);
         }
 
         private void Produce(ProductionUnit productionUnit, IList<MineableResource> activeMineableResources)
