@@ -21,7 +21,7 @@ namespace Assemble.Desktop
 
         private float GetPositionDepth(TilePosition tilePosition)
         {
-            return (tilePosition.Position.X + tilePosition.TileSpan.X + tilePosition.Position.Y + tilePosition.TileSpan.Y) * _heightModifier;
+            return (float)((Math.Ceiling(tilePosition.Position.X + tilePosition.TileSpan.X) + Math.Ceiling(tilePosition.Position.Y + tilePosition.TileSpan.Y)) * _heightModifier);
         }
 
         private float GetLayerDepth(TileRenderLayer layer)
