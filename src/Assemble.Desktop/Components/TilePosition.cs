@@ -23,6 +23,11 @@ namespace Assemble.Desktop.Components
             Position = new Vector2(tileIndex.X, tileIndex.Y);
         }
 
+        public void Move(Vector2 movement)
+        {
+            Position += movement;
+        }
+
         public RectangleF GetArea()
         {
             return new RectangleF(Position.X, Position.Y, TileSpan.X, TileSpan.Y);

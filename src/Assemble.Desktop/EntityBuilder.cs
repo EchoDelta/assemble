@@ -75,6 +75,11 @@ namespace Assemble.Desktop
             {
                 entity.Attach(new Blockable());
             }
+            if (unitConfig.TransportationSpeed.HasValue)
+            {
+                entity.Attach(new Transporter(unitConfig.TransportationSpeed.Value));
+            }
+
             return entity;
         }
 

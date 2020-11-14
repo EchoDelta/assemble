@@ -12,5 +12,6 @@ namespace Assemble.Desktop.UnitConfiguration
         public TimeSpan? ProductionSpeed => TimeSpan.FromSeconds(5);
         public int? OutputBufferSize => 3;
         public bool Blockable => true;
+        public float? TransportationSpeed => null;
     }
 }

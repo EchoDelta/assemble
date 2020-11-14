@@ -49,6 +49,7 @@ namespace Assemble.Desktop.Systems
             productionUnit.OutputBuffer.RemoveAt(0);
             var outputProductEntity = GetEntity(outputProductEntityId);
             outputProductEntity.Attach(outputPosition);
+            outputProductEntity.Attach(new Transportable());
         }
 
         private bool OutputPositionIsOccupied(TilePosition outputPosition)
