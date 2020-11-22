@@ -55,7 +55,10 @@ namespace Assemble.Desktop
             var texture = _contentManager.Load<Texture2D>("Miner");
             var textureMap = _contentManager.Load<Dictionary<string, Rectangle>>("MinerMap");
             var atlas = new TextureAtlas("MinerAtlas", texture, textureMap);
-            _textureMap.Add(Texture.Miner, atlas.GetRegion(0));
+            _textureMap.Add(Texture.MinerNE, atlas.GetRegion(0));
+            _textureMap.Add(Texture.MinerSE, atlas.GetRegion(1));
+            _textureMap.Add(Texture.MinerSW, atlas.GetRegion(2));
+            _textureMap.Add(Texture.MinerNW, atlas.GetRegion(3));
         }
 
         private void LoadConveyorBelt()
@@ -64,9 +67,9 @@ namespace Assemble.Desktop
             var textureMap = _contentManager.Load<Dictionary<string, Rectangle>>("ConveyorBeltMap");
             var atlas = new TextureAtlas("ConveyorBeltAtlas", texture, textureMap);
             _textureMap.Add(Texture.ConveyorBeltNE, atlas.GetRegion(0));
-            _textureMap.Add(Texture.ConveyorBeltNW, atlas.GetRegion(1));
-            _textureMap.Add(Texture.ConveyorBeltSW, atlas.GetRegion(2));
             _textureMap.Add(Texture.ConveyorBeltSE, atlas.GetRegion(1));
+            _textureMap.Add(Texture.ConveyorBeltSW, atlas.GetRegion(2));
+            _textureMap.Add(Texture.ConveyorBeltNW, atlas.GetRegion(3));
         }
 
         public TextureRegion2D GetRandomTexture(params Texture[] textures)

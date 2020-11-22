@@ -9,10 +9,13 @@ namespace Assemble.Desktop
         IronOre1,
         IronOre2,
         IronOre3,
-        Miner,
+        MinerNE,
+        MinerSE,
+        MinerSW,
+        MinerNW,
         ConveyorBeltNE,
-        ConveyorBeltNW,
-        ConveyorBeltSW,
         ConveyorBeltSE,
+        ConveyorBeltSW,
+        ConveyorBeltNW,
     }
 }
