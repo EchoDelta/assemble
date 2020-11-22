@@ -3,19 +3,19 @@
   <Asset Type="System.Collections.Generic.Dictionary[System.String, Microsoft.Xna.Framework.Rectangle]">
     <Item>
       <Key>ConveyorBelt_NE_001.png</Key>
-      <Value>0 0 128 68</Value>
+      <Value>0 0 128 72</Value>
     </Item>
     <Item>
       <Key>ConveyorBelt_NW_001.png</Key>
-      <Value>128 0 128 68</Value>
+      <Value>0 72 128 72</Value>
     </Item>
     <Item>
       <Key>ConveyorBelt_SW_001.png</Key>
-      <Value>256 0 128 68</Value>
+      <Value>0 144 128 72</Value>
     </Item>
     <Item>
       <Key>ConveyorBelt_SE_001.png</Key>
-      <Value>384 0 128 68</Value>
+      <Value>0 216 128 72</Value>
     </Item>
   </Asset>
 </XnaContent>

@@ -2,8 +2,20 @@
 <XnaContent>
   <Asset Type="System.Collections.Generic.Dictionary[System.String, Microsoft.Xna.Framework.Rectangle]">
     <Item>
-      <Key>Miner_001.png</Key>
+      <Key>Miner_NE_001.png</Key>
       <Value>0 0 256 192</Value>
+    </Item>
+    <Item>
+      <Key>Miner_SE_001.png</Key>
+      <Value>0 192 256 192</Value>
+    </Item>
+    <Item>
+      <Key>Miner_SW_001.png</Key>
+      <Value>0 384 256 192</Value>
+    </Item>
+    <Item>
+      <Key>Miner_NW_001.png</Key>
+      <Value>0 576 256 192</Value>
     </Item>
   </Asset>
 </XnaContent>
