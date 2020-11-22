@@ -6,8 +6,8 @@ namespace Assemble.Desktop.Components
     {
         public Unit(UnitType type)
         {
-            UnitType = type;
+            Type = type;
         }
-        public UnitType UnitType { get; }
+        public UnitType Type { get; }
     }
 }

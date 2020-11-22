@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 
 namespace Assemble.Desktop.Components
 {
@@ -20,6 +21,16 @@ namespace Assemble.Desktop.Components
         public void ChangeTile((int X, int Y) tileIndex)
         {
             Position = new Vector2(tileIndex.X, tileIndex.Y);
+        }
+
+        public void Move(Vector2 movement)
+        {
+            Position += movement;
+        }
+
+        public RectangleF GetArea()
+        {
+            return new RectangleF(Position.X, Position.Y, TileSpan.X, TileSpan.Y);
         }
     }
 }

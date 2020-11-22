@@ -1,4 +1,5 @@
-﻿using Assemble.Desktop.Systems;
+﻿using Assemble.Desktop.Positioning;
+using Assemble.Desktop.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -34,15 +35,20 @@ namespace Assemble.Desktop
 
             var texturesManager = new TexturesManager(Content);
             var entityBuilder = new EntityBuilder(texturesManager);
-            var gridManager = new GridManager(mapSize, mapSize);
+            var tileOccupationManager = new TileOccupationManager(mapSize, mapSize);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _camera = new OrthographicCamera(GraphicsDevice);
             _world = new WorldBuilder()
                 .AddSystem(new ControlSystem())
                 .AddSystem(new CameraSystem())
-                .AddSystem(new UnitGridOccupationSystem(gridManager))
-                .AddSystem(new ItemPlacementSystem(entityBuilder, _camera, gridManager))
+                .AddSystem(new SpatialTilePositionSystem(tileOccupationManager))
+                .AddSystem(new UnitPlacementSystem(entityBuilder, _camera, tileOccupationManager))
+                .AddSystem(new MinerProcessingSystem(tileOccupationManager, entityBuilder))
+                .AddSystem(new MineableResourceSystem())
+                .AddSystem(new ProductionUnitOutputSystem(tileOccupationManager))
+                .AddSystem(new TransporterTransportSystem(tileOccupationManager))
+                .AddSystem(new TransportableMovementSystem(tileOccupationManager))
                 .AddSystem(new TileRenderSystem(_spriteBatch, _camera, new DepthHelper((mapSize, mapSize))))
                 .AddSystem(new MapRenderSystem(_spriteBatch, _camera, mapSize))
                 .Build();

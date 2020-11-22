@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace Assemble.Desktop.UnitConfiguration
 {
@@ -8,5 +9,9 @@ namespace Assemble.Desktop.UnitConfiguration
         UnitType UnitType { get; }
         (int x, int y) TileSpan { get; }
         Color MiniMapColor { get; }
+        TimeSpan? ProductionSpeed { get; }
+        int? OutputBufferSize { get; }
+        bool Blockable { get; }
+        float? TransportationSpeed { get; }
     }
 }

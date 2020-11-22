@@ -1,4 +1,5 @@
-﻿using Assemble.Desktop.Components;
+﻿using System;
+using Assemble.Desktop.Components;
 using Assemble.Desktop.Enums;
 using Assemble.Desktop.Extensions;
 using Assemble.Desktop.UnitConfiguration;
@@ -39,10 +40,12 @@ namespace Assemble.Desktop
 
         public Entity BuildIronOrePatch(Entity entity, (int X, int Y) tileIndex)
         {
+            entity.Attach(new MineableResource() { Amount = 100 });
             entity.Attach(new TilePosition(tileIndex));
             entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Resources));
             entity.Attach(new MapTile(Color.LightBlue));
+            entity.Attach(new Spatial());
             return entity;
         }
 
@@ -63,6 +66,29 @@ namespace Assemble.Desktop
             entity.Attach(new MapTile(unitConfig.MiniMapColor));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit(unitConfig.UnitType));
+            entity.Attach(new Spatial());
+            if (unitConfig.ProductionSpeed.HasValue || unitConfig.OutputBufferSize.HasValue)
+            {
+                entity.Attach(new ProductionUnit(unitConfig.ProductionSpeed ?? TimeSpan.FromSeconds(60), unitConfig.OutputBufferSize ?? 1));
+            }
+            if (unitConfig.Blockable)
+            {
+                entity.Attach(new Blockable());
+            }
+            if (unitConfig.TransportationSpeed.HasValue)
+            {
+                entity.Attach(new Transporter(unitConfig.TransportationSpeed.Value));
+            }
+
+            return entity;
+        }
+
+        public Entity BuildProduct(Entity entity, ProductType productType)
+        {
+            entity.Attach(new Product(productType));
+            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(Texture.IronOre1, Texture.IronOre2, Texture.IronOre3)));
+            entity.Attach(new TileRenderLayer(TileRenderLayerType.Products));
+            entity.Attach(new Spatial());
             return entity;
         }
     }
