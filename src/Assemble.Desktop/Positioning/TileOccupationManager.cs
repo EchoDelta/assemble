@@ -64,6 +64,11 @@ namespace Assemble.Desktop.Positioning
             }
         }
 
+        public IEnumerable<int> GetItemsInTile(int x, int y)
+        {
+            return GetItemsInTiles(x, y, x, y).Select(i => i.entityId);
+        }
+
         private IEnumerable<(int entityId, TilePosition tilePosition)> GetItemsInTiles(int startTileX, int startTileY, int endTileX, int endTileY)
         {
             for (var x = Math.Max(0, startTileX); x < Math.Min(entities.GetLength(0), endTileX + 1); x++)

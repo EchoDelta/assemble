@@ -2,6 +2,7 @@ using System.Linq;
 using Assemble.Desktop.Components;
 using Assemble.Desktop.Positioning;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using MonoGame.Extended.Entities;
 using MonoGame.Extended.Entities.Systems;
 
@@ -37,8 +38,19 @@ namespace Assemble.Desktop.Systems
 
             foreach (var transportable in transportables)
             {
-                transportable.Velocity = new Vector2(0, (float)(-transporter.TransportSpeed * gameTime.ElapsedGameTime.TotalSeconds));
+                var motion = new Vector2(0, (float)(-transporter.TransportSpeed * gameTime.ElapsedGameTime.TotalSeconds));
+                if (IsTransporterAtNextTile(tilePosition, motion))
+                {
+                    transportable.Velocity = motion;
+                }
             }
+        }
+
+        private bool IsTransporterAtNextTile(TilePosition transporterTilePosition, Vector2 motion)
+        {
+            var nextTilePostition = transporterTilePosition.Position + motion.NormalizedCopy();
+            var (x, y) = ((int)nextTilePostition.X, (int)nextTilePostition.Y);
+            return _tileOccupationManager.GetItemsInTile(x, y).Any(e => _transporterMapper.Has(e));
         }
     }
 }
