@@ -106,7 +106,7 @@ namespace Assemble.Desktop.Systems
             {
                 DestroyEntity(_currentPlaceableEntity.Id);
             }
-            _currentPlaceableEntity = _entityBuilder.BuildPlacementGuide(CreateEntity(), _currentPlaceableUnitConfig.Texture, currentTile, _currentPlaceableUnitConfig.TileSpan);
+            _currentPlaceableEntity = _entityBuilder.BuildPlacementGuide(CreateEntity(), _currentPlaceableUnitConfig, currentTile);
         }
 
         private void ClearPlacementGuide()

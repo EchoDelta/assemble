@@ -49,10 +49,13 @@ namespace Assemble.Desktop
             return entity;
         }
 
-        public Entity BuildPlacementGuide(Entity entity, Texture spriteTexture, (int X, int Y) tileIndex, (int X, int Y) tileSpan)
+        public Entity BuildPlacementGuide(Entity entity, IUnitConfig unitConfig, (int X, int Y) tileIndex)
         {
-            entity.Attach(new TilePosition(tileIndex, tileSpan));
-            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(spriteTexture)) { Alpha = 0.7f });
+            entity.Attach(new TilePosition(tileIndex, unitConfig.TileSpan));
+            var directionalTexture = unitConfig.GetDirectionalTexture();
+            directionalTexture.Alpha = 0.7f;
+            entity.Attach(directionalTexture);
+            entity.Attach(new Alignable(Direction.NorthEast));
             entity.Attach(new TileBorder() { Color = Color.LimeGreen });
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Overlay));
             entity.Attach(new Placeable());
@@ -62,7 +65,8 @@ namespace Assemble.Desktop
         public Entity BuildUnit(Entity entity, (int x, int y) tileIndex, IUnitConfig unitConfig)
         {
             entity.Attach(new TilePosition(tileIndex, unitConfig.TileSpan));
-            entity.Attach(new Sprite(_texturesManager.GetRandomTexture(unitConfig.Texture)));
+            entity.Attach(unitConfig.GetDirectionalTexture());
+            entity.Attach(new Alignable(Direction.NorthEast));
             entity.Attach(new MapTile(unitConfig.MiniMapColor));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit(unitConfig.UnitType));

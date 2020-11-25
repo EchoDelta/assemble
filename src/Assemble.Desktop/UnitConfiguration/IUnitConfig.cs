@@ -5,7 +5,10 @@ namespace Assemble.Desktop.UnitConfiguration
 {
     public interface IUnitConfig
     {
-        Texture Texture { get; }
+        Texture TextureNorthEast { get; }
+        Texture TextureSouthEast { get; }
+        Texture TextureSouthWest { get; }
+        Texture TextureNorthWest { get; }
         UnitType UnitType { get; }
         (int x, int y) TileSpan { get; }
         Color MiniMapColor { get; }
