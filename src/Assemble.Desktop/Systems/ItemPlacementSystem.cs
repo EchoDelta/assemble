@@ -20,10 +20,13 @@ namespace Assemble.Desktop.Systems
         private ComponentMapper<TilePosition> _tilePositionMapper;
         private ComponentMapper<TileBorder> _tileBorderMapper;
         private ComponentMapper<Unit> _unitMapper;
+        private ComponentMapper<Alignable> _alignableMapper;
         private readonly EntityBuilder _entityBuilder;
         private readonly OrthographicCamera _camera;
         private readonly TileOccupationManager _tileOccupationManager;
         private MouseStateExtended _previousMouseState;
+
+        private bool isRotating = false;
 
 
         public UnitPlacementSystem(EntityBuilder entityBuilder, OrthographicCamera camera, TileOccupationManager tileOccupationManager) : base(Aspect.All(typeof(Placeable)))
@@ -39,6 +42,7 @@ namespace Assemble.Desktop.Systems
             _tilePositionMapper = mapperService.GetMapper<TilePosition>();
             _tileBorderMapper = mapperService.GetMapper<TileBorder>();
             _unitMapper = mapperService.GetMapper<Unit>();
+            _alignableMapper = mapperService.GetMapper<Alignable>();
         }
 
         public override void Update(GameTime gameTime)
@@ -50,17 +54,34 @@ namespace Assemble.Desktop.Systems
 
             (int, int) currentTile = mousePosition.MapFromCenterTilePointToTopRightTileIndex(_currentPlaceableUnitConfig?.TileSpan ?? (1, 1));
 
+            // TODO: Introduce state machine :D
             if (keyboardState.IsKeyDown(Keys.D1))
             {
                 MakeNewPlacementGuide(new MinerUnitConfig(), currentTile);
             }
+
             if (keyboardState.IsKeyDown(Keys.D2))
             {
                 MakeNewPlacementGuide(new ConveyorBeltUnitConfig(), currentTile);
             }
-            else if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntity != null)
+
+            if (keyboardState.IsKeyDown(Keys.Escape) && _currentPlaceableEntity != null)
             {
                 ClearPlacementGuide();
+            }
+
+            if (keyboardState.IsKeyDown(Keys.R) && _currentPlaceableEntity != null && !isRotating)
+            {
+                isRotating = true;
+                var alignable = _currentPlaceableEntity.Get<Alignable>();
+                if (alignable != null)
+                {
+                    alignable.Rotate();
+                }
+            }
+            else if (keyboardState.IsKeyUp(Keys.R))
+            {
+                isRotating = false;
             }
 
             var currentTileOccupied = IsCurrentTileOccupied(currentTile);
@@ -68,7 +89,8 @@ namespace Assemble.Desktop.Systems
             if (mouseState.LeftButton == ButtonState.Released && _previousMouseState.LeftButton == ButtonState.Pressed
                 && _currentPlaceableEntity != null && !currentTileOccupied)
             {
-                _entityBuilder.BuildUnit(CreateEntity(), currentTile, _currentPlaceableUnitConfig);
+                var alignable = _currentPlaceableEntity.Get<Alignable>();
+                _entityBuilder.BuildUnit(CreateEntity(), currentTile, _currentPlaceableUnitConfig, alignable.Direction);
             }
 
             foreach (var entityId in ActiveEntities)

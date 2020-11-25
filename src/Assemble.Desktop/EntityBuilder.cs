@@ -62,11 +62,11 @@ namespace Assemble.Desktop
             return entity;
         }
 
-        public Entity BuildUnit(Entity entity, (int x, int y) tileIndex, IUnitConfig unitConfig)
+        public Entity BuildUnit(Entity entity, (int x, int y) tileIndex, IUnitConfig unitConfig, Direction direction)
         {
             entity.Attach(new TilePosition(tileIndex, unitConfig.TileSpan));
             entity.Attach(unitConfig.GetDirectionalTexture());
-            entity.Attach(new Alignable(Direction.NorthEast));
+            entity.Attach(new Alignable(direction));
             entity.Attach(new MapTile(unitConfig.MiniMapColor));
             entity.Attach(new TileRenderLayer(TileRenderLayerType.Units));
             entity.Attach(new Unit(unitConfig.UnitType));
