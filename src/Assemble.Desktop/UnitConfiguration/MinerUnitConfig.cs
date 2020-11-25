@@ -13,5 +13,9 @@ namespace Assemble.Desktop.UnitConfiguration
         public int? OutputBufferSize => 3;
         public bool Blockable => true;
         public float? TransportationSpeed => null;
+        public Texture TextureNorthEast => Texture.MinerNE;
+        public Texture TextureSouthEast => Texture.MinerSE;
+        public Texture TextureSouthWest => Texture.MinerSW;
+        public Texture TextureNorthWest => Texture.MinerNW;
     }
 }

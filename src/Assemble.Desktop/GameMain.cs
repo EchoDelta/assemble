@@ -49,6 +49,7 @@ namespace Assemble.Desktop
                 .AddSystem(new ProductionUnitOutputSystem(tileOccupationManager))
                 .AddSystem(new TransporterTransportSystem(tileOccupationManager))
                 .AddSystem(new TransportableMovementSystem(tileOccupationManager))
+                .AddSystem(new AlignableSpritePickingSystem(texturesManager))
                 .AddSystem(new TileRenderSystem(_spriteBatch, _camera, new DepthHelper((mapSize, mapSize))))
                 .AddSystem(new MapRenderSystem(_spriteBatch, _camera, mapSize))
                 .Build();
