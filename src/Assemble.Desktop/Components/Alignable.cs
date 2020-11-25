@@ -1,3 +1,4 @@
+using System;
 using Assemble.Desktop.Enums;
 
 namespace Assemble.Desktop.Components
@@ -9,6 +10,11 @@ namespace Assemble.Desktop.Components
         public Alignable(Direction initalDirection)
         {
             Direction = initalDirection;
+        }
+
+        public void Rotate()
+        {
+            Direction = (Direction)((int)(Direction + 1) % Enum.GetNames(typeof(Direction)).Length);
         }
     }
 }
